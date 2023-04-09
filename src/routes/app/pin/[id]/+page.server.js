@@ -6,8 +6,11 @@ export const actions = {
         const formData = await event.request.formData();
         const {data, error} = await supabaseClient
             .from('pins')
-            .insert([
-                {title: formData.get('pin-url'), url: formData.get('pin-url')},
-            ])
+            .update({
+                title: formData.get('pin-title'),
+                url: formData.get('pin-url'),
+                description: formData.get('pin-description'),
+            })
+            .eq('id', event.params.id)
     }
 };

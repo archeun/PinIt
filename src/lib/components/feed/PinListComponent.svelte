@@ -8,8 +8,10 @@
         let {data, error} = await supabaseClient
             .from('pins')
             .select(`
+                id,
                 title,
                 url,
+                description,
                 boards (
                   name
                 ),
@@ -33,9 +35,11 @@
                                 <h2 class="card-title text-info col-span-11">
                                     <a target="_blank" href="{pin.url}">{pin.title}</a>
                                 </h2>
-                                <div class="justify-self-end">Edit</div>
+                                <div class="justify-self-end">
+                                    <a href={`/app/pin/${pin.id}`}>Edit</a>
+                                </div>
                             </div>
-                            <p>If a dog chews shoes whose shoes does he choose?</p>
+                            <p>{pin.description}</p>
                             <div class="card-actions justify-end text-xs">
                                 {pin.boards?.name}
                                 {pin.profiles?.username}
