@@ -13,5 +13,13 @@ export const actions = {
             return data[0]
         }
         return error
+    },
+    deletePin: async (event) => {
+        const pinId = (await event.request.formData()).get('pin-id');
+        const {supabaseClient} = await getSupabase(event);
+        await supabaseClient
+            .from('pins')
+            .delete()
+            .eq('id', pinId)
     }
 };

@@ -1,6 +1,7 @@
 <script>
     import {onMount} from "svelte";
     import {supabaseClient} from "$lib/supabaseClient";
+    import {enhance} from '$app/forms';
 
     let pins = [];
 
@@ -32,7 +33,11 @@
                                             <div class="card-body">
                                                 <p>Do you really want to delete this pin?</p>
                                                 <div class="card-actions justify-end">
-                                                    <button class="btn btn-error btn-xs">Yes, delete</button>
+                                                    <form name="delete-pin-form" method="POST" action="?/deletePin"
+                                                          use:enhance>
+                                                        <input name="pin-id" type="hidden" value={pin.id}/>
+                                                        <button class="btn btn-error btn-xs">Yes, delete</button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
