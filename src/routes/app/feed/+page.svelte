@@ -1,5 +1,5 @@
 <script>
-    import SubmitPinFormComponent from "$lib/components/SubmitPinFormComponent.svelte";
+    import SubmitPinFormComponent from "$lib/components/feed/SubmitPinFormComponent.svelte";
 </script>
 
 <div class="container p-2 mx-auto">
