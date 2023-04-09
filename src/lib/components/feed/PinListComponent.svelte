@@ -32,14 +32,14 @@
                     <div class="card w-full bg-base-100 shadow mb-4 rounded-none">
                         <div class="card-body text-sm">
                             <div class="grid grid-cols-12">
-                                <h2 class="card-title text-info col-span-11">
+                                <div class="card-title text-info col-span-11 break-words break-all">
                                     <a target="_blank" href="{pin.url}">{pin.title}</a>
-                                </h2>
+                                </div>
                                 <div class="justify-self-end">
                                     <a href={`/app/pin/${pin.id}`}>Edit</a>
                                 </div>
                             </div>
-                            <p>{pin.description}</p>
+                            <p class="whitespace-pre-wrap break-words">{pin.description}</p>
                             <div class="card-actions justify-end text-xs">
                                 {pin.boards?.name}
                                 {pin.profiles?.username}

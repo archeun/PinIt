@@ -5,4 +5,4 @@
 </script>
 
 <EditPinFormComponent pin={data.pin}/>
-<h1>{JSON.stringify(data.pin)}</h1>
+

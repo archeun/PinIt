@@ -11,13 +11,14 @@ export async function load(event) {
                 title,
                 url,
                 description,
+                board_id,
+                created_at,
                 boards (
                   name
                 ),
                 profiles (
                   username
-                ),
-                created_at
+                )
         `)
         .eq('id', params.id)
 

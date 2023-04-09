@@ -10,6 +10,7 @@ export const actions = {
                 title: formData.get('pin-title'),
                 url: formData.get('pin-url'),
                 description: formData.get('pin-description'),
+                board_id: formData.get('pin-board-id')
             })
             .eq('id', event.params.id)
     }
