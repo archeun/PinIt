@@ -1,5 +1,14 @@
 <script>
     import {enhance} from '$app/forms';
+    import {goto} from "$app/navigation";
+
+    const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
+        return async ({result, update}) => {
+            if (result.status === 200 && result.type === 'success' && result.data && result.data.id) {
+                await goto(`/app/pin/${result.data.id}`)
+            }
+        };
+    }
 </script>
 
 <div class="p-4 mb-4 flex">
@@ -10,7 +19,8 @@
                   d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"/>
         </svg>
     </span>
-    <form name="submit-pin-form" method="POST" class="flex w-full" use:enhance>
+    <form name="submit-pin-form" method="POST" class="flex w-full" action="?/submitPin"
+          use:enhance={formEnhanceCallback}>
         <input name="pin-url" type="text" placeholder="Paste the URL here..."
                class="input-info input rounded-none w-full"/>
         <button class="btn gap-2 rounded-none btn-info text-white font-bold">

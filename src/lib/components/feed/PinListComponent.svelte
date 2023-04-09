@@ -5,21 +5,9 @@
     let pins = [];
 
     onMount(async () => {
-        let {data, error} = await supabaseClient
+        let {data} = await supabaseClient
             .from('pins')
-            .select(`
-                id,
-                title,
-                url,
-                description,
-                boards (
-                  name
-                ),
-                profiles (
-                  username
-                ),
-                created_at
-            `);
+            .select(`id,title,url,description,boards (name),profiles (username),created_at`);
         pins = data
     });
 </script>
@@ -37,6 +25,18 @@
                                 </div>
                                 <div class="justify-self-end">
                                     <a href={`/app/pin/${pin.id}`}>Edit</a>
+                                    <div class="dropdown dropdown-bottom dropdown-end">
+                                        <div tabindex="0" class="m-1 cursor-pointer">Delete</div>
+                                        <div tabindex="0"
+                                             class="dropdown-content card card-compact w-64 p-2 shadow bg-warning">
+                                            <div class="card-body">
+                                                <p>Do you really want to delete this pin?</p>
+                                                <div class="card-actions justify-end">
+                                                    <button class="btn btn-error btn-xs">Yes, delete</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <p class="whitespace-pre-wrap break-words">{pin.description}</p>
