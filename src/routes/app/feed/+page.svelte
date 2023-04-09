@@ -1,10 +1,10 @@
 <script>
-    import SimpleSubmitPinComponent from "$lib/components/SimpleSubmitPinComponent.svelte";
+    import SubmitPinFormComponent from "$lib/components/SubmitPinFormComponent.svelte";
 </script>
 
 <div class="container p-2 mx-auto">
     <div class="flex flex-col">
-        <SimpleSubmitPinComponent/>
+        <SubmitPinFormComponent/>
         <div class="">// Main Content //</div>
     </div>
 </div>
