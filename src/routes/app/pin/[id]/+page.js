@@ -1,6 +1,6 @@
 import {getSupabase} from "@supabase/auth-helpers-sveltekit";
 import {error} from '@sveltejs/kit';
-import {supabaseClient} from "../../../../lib/supabaseClient.js";
+import {supabaseClient} from "$lib/supabaseClient";
 import {browser} from '$app/environment';
 
 export async function load(event) {
