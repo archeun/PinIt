@@ -2,13 +2,14 @@
     import {onMount} from "svelte";
     import {supabaseClient} from "$lib/supabaseClient";
     import {enhance} from '$app/forms';
+    import dbUtil from "$lib/dbUtil";
 
     let pins = [];
 
     onMount(async () => {
-        let {data} = await supabaseClient
-            .from('pins')
-            .select(`id,title,url,description,boards (name),profiles (username),created_at`);
+        const {data} = await dbUtil(supabaseClient).pins.getAll(
+            `id,title,url,description,boards (name),profiles (username),created_at`
+        )
         pins = data
     });
 </script>

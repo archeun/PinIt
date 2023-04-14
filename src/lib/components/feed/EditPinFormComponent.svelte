@@ -2,14 +2,13 @@
     import {enhance} from '$app/forms';
     import {onMount} from "svelte";
     import {supabaseClient} from "$lib/supabaseClient";
+    import dbUtil from "$lib/dbUtil";
 
     export let pin = {};
     let boards = [];
     onMount(async () => {
-        const {data, error} = await supabaseClient
-            .from('boards')
-            .select('*');
-        boards = data;
+        const {data} = await dbUtil(supabaseClient).boards.getAll()
+        boards = data
     })
 </script>
 

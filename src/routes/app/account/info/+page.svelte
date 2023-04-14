@@ -2,6 +2,7 @@
     import {page} from '$app/stores'
     import {onMount} from 'svelte'
     import {supabaseClient} from '$lib/supabaseClient'
+    import dbUtil from "$lib/dbUtil";
 
     const session = $page.data.session;
     let loading = false
@@ -17,11 +18,7 @@
             loading = true
             const {user} = session
 
-            const {data, error, status} = await supabaseClient
-                .from('profiles')
-                .select(`username, avatar_url`)
-                .eq('id', user.id)
-                .single()
+            const {data, error, status} = await dbUtil(supabaseClient).profiles.getOne(user.id, 'username, avatar_url')
 
             if (data) {
                 username = data.username
@@ -43,14 +40,11 @@
             loading = true
             const {user} = session
 
-            const updates = {
-                id: user.id,
+            let {error} = await dbUtil(supabaseClient).profiles.update(user.id, {
                 username,
                 avatar_url: avatarUrl,
                 updated_at: new Date(),
-            }
-
-            let {error} = await supabaseClient.from('profiles').upsert(updates)
+            })
 
             if (error) throw error
         } catch (error) {

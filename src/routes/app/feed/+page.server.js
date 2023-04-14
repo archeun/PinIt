@@ -1,14 +1,11 @@
 import {getSupabase} from "@supabase/auth-helpers-sveltekit";
+import dbUtil from "$lib/dbUtil";
 
 export const actions = {
     submitPin: async (event) => {
         const {supabaseClient} = await getSupabase(event);
         const formData = await event.request.formData();
-        const {data, error} = await supabaseClient
-            .from('pins')
-            .insert([
-                {title: formData.get('pin-url'), url: formData.get('pin-url')},
-            ]).select()
+        const {data, error} = await dbUtil(supabaseClient).pins.insert({url: formData.get('pin-url')})
         if (data && data[0] && data[0].id) {
             return data[0]
         }
@@ -17,9 +14,6 @@ export const actions = {
     deletePin: async (event) => {
         const pinId = (await event.request.formData()).get('pin-id');
         const {supabaseClient} = await getSupabase(event);
-        await supabaseClient
-            .from('pins')
-            .delete()
-            .eq('id', pinId)
+        await dbUtil(supabaseClient).pins.delete(pinId)
     }
 };
