@@ -4,18 +4,28 @@
     import {enhance} from '$app/forms';
     import dbUtil from "$lib/dbUtil";
 
+    let showPinCount = 10
     let pins = [];
+    let allPinsCount = 0;
+
+    const loadNextPins = async () => {
+        const {data} = await dbUtil(supabaseClient).pins.getAll(
+            `id,title,url,description,boards (name),profiles (username),created_at`,
+            {by: 'created_at', opts: {ascending: false}},
+            {start: pins.length, end: pins.length + showPinCount - 1}
+        )
+        pins = [...pins, ...data]
+    }
 
     onMount(async () => {
-        const {data} = await dbUtil(supabaseClient).pins.getAll(
-            `id,title,url,description,boards (name),profiles (username),created_at`
-        )
-        pins = data
+        await loadNextPins()
+        allPinsCount = await dbUtil(supabaseClient).pins.getAllCount()
     });
 </script>
 
-<div class="pl-2 mb-4 flex">
-    <div class="overflow-x-auto">
+<div class="flex pl-4 pr-4">
+    <div class="w-full">
+        Showing {pins.length} pins out of {allPinsCount}
         <ul>
             {#each pins as pin}
                 <li>
@@ -56,5 +66,8 @@
                 </li>
             {/each}
         </ul>
+        <button class:hidden={pins.length >= allPinsCount} class="btn btn-link" on:click={loadNextPins}>
+            Load more
+        </button>
     </div>
 </div>

@@ -2,17 +2,32 @@ export default function dbUtil(supabase) {
 
     return {
         pins: {
-            async getAll(attributes = '*') {
-                let {data, error} = await supabase
+            async getAllCount() {
+                const { count, error } = await supabase
                     .from('pins')
-                    .select(attributes);
+                    .select('*', { count: 'exact', head: true })
+                if (error) {
+                    console.error(error)
+                }
+                return count
+            },
+            async getAll(
+                attributes = '*',
+                order = {by: 'created_at', opts: {ascending: false}},
+                range = {start: 0, end: 9}
+            ) {
+                const {data, error} = await supabase
+                    .from('pins')
+                    .select(attributes)
+                    .order(order.by, order.opts)
+                    .range(range.start, range.end);
                 if (error) {
                     console.error(error)
                 }
                 return {data, error}
             },
             async getOne(id, attributes = '*') {
-                let {data, error} = await supabase
+                const {data, error} = await supabase
                     .from('pins')
                     .select(attributes)
                     .eq('id', id)
@@ -56,7 +71,7 @@ export default function dbUtil(supabase) {
         },
         boards: {
             async getAll(attributes = '*') {
-                let {data, error} = await supabase
+                const {data, error} = await supabase
                     .from('boards')
                     .select(attributes);
                 if (error) {
@@ -67,7 +82,7 @@ export default function dbUtil(supabase) {
         },
         profiles: {
             async getOne(id, attributes = '*') {
-                let {data, error} = await supabase
+                const {data, error} = await supabase
                     .from('profiles')
                     .select(attributes)
                     .eq('id', id)
