@@ -11,7 +11,7 @@ export default function dbUtil(supabase) {
                 }
                 return count
             },
-            async getAll(
+            async search(
                 attributes = '*',
                 order = {by: 'created_at', opts: {ascending: false}},
                 range = {start: 0, end: 9}

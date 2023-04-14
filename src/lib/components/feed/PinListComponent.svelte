@@ -9,7 +9,7 @@
     let allPinsCount = 0;
 
     const loadNextPins = async () => {
-        const {data} = await dbUtil(supabaseClient).pins.getAll(
+        const {data} = await dbUtil(supabaseClient).pins.search(
             `id,title,url,description,boards (name),profiles (username),created_at`,
             {by: 'created_at', opts: {ascending: false}},
             {start: pins.length, end: pins.length + showPinCount - 1}
