@@ -5,6 +5,7 @@
     import dbUtil from "$lib/dbUtil";
     import {page} from "$app/stores";
 
+    const pinAttributes = `id,title,url,description,owner_id,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
     let showPinCount = 10
     let pins = [];
     let boards = [];
@@ -15,7 +16,7 @@
 
     const searchPins = async () => {
         const {data} = await dbUtil(supabaseClient).pins.search(
-            `id,title,url,description,owner_id,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`,
+            pinAttributes,
             searchParams,
             {by: 'created_at', opts: {ascending: false}},
             {start: pins.length, end: pins.length + showPinCount - 1}
@@ -45,8 +46,10 @@
         return async (opts) => {
             const formData = new FormData(params.form);
             const pinId = Object.fromEntries(formData)['pin-id'];
-            const pinIdx = pins.findIndex(pin => pin.id === pinId)
-            pins[pinIdx].hasStarred = !pins[pinIdx].hasStarred
+            const pinIdx = pins.findIndex(pin => pin.id === pinId);
+            const {data} = await dbUtil(supabaseClient).pins.getOne(pinId, pinAttributes)
+            pins[pinIdx] = data
+            pins = populateExtraData(pins)
         };
     }
 
