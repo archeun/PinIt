@@ -19,6 +19,5 @@ export const actions = {
     searchPins: async (event) => {
         const pinId = (await event.request.formData()).get('pin-id');
         const {supabaseClient} = await getSupabase(event);
-        // console.log(await event.request.formData())
     }
 };
