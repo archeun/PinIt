@@ -9,15 +9,7 @@
     let boards = [];
     let profiles = [];
     let allPinsCount = 0;
-    let searchParams = {
-        title: '',
-        url: '',
-        description: '',
-        board_id: '',
-        owner_id: '',
-        fromDate: '',
-        toDate: '',
-    }
+    let searchParams = {}
     let showSearchModal = false
 
     const searchPins = async () => {
@@ -40,6 +32,14 @@
         showSearchModal = false
     }
 
+    const handleDeletePin = (paras) => {
+        return async (opts) => {
+            const formData = new FormData(paras.form);
+            const deletedPinId = Object.fromEntries(formData)['pin-id'];
+            pins = pins.filter(pin => pin.id !== deletedPinId)
+        };
+    }
+
     onMount(async () => {
         await searchPins()
         const boardsData = await dbUtil(supabaseClient).boards.getAll()
@@ -49,7 +49,7 @@
     });
 </script>
 
-<div class="flex pl-4 pr-4">
+<div class="flex pl-4 pr-4" id="pin-list-container">
     <div class="w-full">
         <div class="flex">
             <label for="search-pins-modal" class="btn">Search</label>
@@ -113,7 +113,7 @@
                                                 <p>Do you really want to delete this pin?</p>
                                                 <div class="card-actions justify-end">
                                                     <form name="delete-pin-form" method="POST" action="?/deletePin"
-                                                          use:enhance>
+                                                          use:enhance={handleDeletePin}>
                                                         <input name="pin-id" type="hidden" value={pin.id}/>
                                                         <button class="btn btn-error btn-xs">Yes, delete</button>
                                                     </form>
