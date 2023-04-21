@@ -5,7 +5,7 @@
     import {page} from "$app/stores";
     import PinComponent from "./PinComponent.svelte";
 
-    const pinAttributes = `id,title,url,description,owner_id,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
+    const pinAttributes = `id,title,url,description,owner_id,image,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
     let showPinCount = 10
     let pins = [];
     let boards = [];
