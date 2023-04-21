@@ -1,5 +1,5 @@
 {
-	"name": "kwenza",
+	"name": "pinit",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -22,6 +22,7 @@
 	"dependencies": {
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
 		"@supabase/supabase-js": "^2.0.5",
-		"daisyui": "^2.38.1"
+		"daisyui": "^2.38.1",
+		"moment": "^2.29.4"
 	}
 }

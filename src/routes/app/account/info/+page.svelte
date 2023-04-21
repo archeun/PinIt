@@ -1,9 +1,10 @@
 <script>
+    import {page} from '$app/stores'
     import {onMount} from 'svelte'
     import {supabaseClient} from '$lib/supabaseClient'
+    import dbUtil from "$lib/dbUtil";
 
-    export let session;
-
+    const session = $page.data.session;
     let loading = false
     let username = null
     let avatarUrl = null
@@ -17,11 +18,7 @@
             loading = true
             const {user} = session
 
-            const {data, error, status} = await supabaseClient
-                .from('profiles')
-                .select(`username, avatar_url`)
-                .eq('id', user.id)
-                .single()
+            const {data, error, status} = await dbUtil(supabaseClient).profiles.getOne(user.id, 'username, avatar_url')
 
             if (data) {
                 username = data.username
@@ -43,29 +40,12 @@
             loading = true
             const {user} = session
 
-            const updates = {
-                id: user.id,
+            let {error} = await dbUtil(supabaseClient).profiles.update(user.id, {
                 username,
                 avatar_url: avatarUrl,
                 updated_at: new Date(),
-            }
+            })
 
-            let {error} = await supabaseClient.from('profiles').upsert(updates)
-
-            if (error) throw error
-        } catch (error) {
-            if (error instanceof Error) {
-                alert(error.message)
-            }
-        } finally {
-            loading = false
-        }
-    }
-
-    async function signOut() {
-        try {
-            loading = true
-            let {error} = await supabaseClient.auth.signOut()
             if (error) throw error
         } catch (error) {
             if (error instanceof Error) {
@@ -77,8 +57,13 @@
     }
 </script>
 
+<svelte:head>
+    <title>Supabase + SvelteKit</title>
+    <meta name="description" content="SvelteKit using supabase-js v2"/>
+</svelte:head>
+
 <div class="flex justify-center">
-    <div class="card w-96 bg-base-100 shadow-lg bg-info">
+    <div class="card w-full bg-base-100 shadow-lg bg-info">
         <figure class="pt-5"><img alt="{username}" src="{avatarUrl}"></figure>
         <div class="card-body">
             <form class="form-widget" on:submit|preventDefault="{updateProfile}">
@@ -98,7 +83,6 @@
                 <div class="card-actions justify-end">
                     <input type="submit" class="btn btn-primary" value={loading ? 'Loading...' : 'Update'}
                            disabled={loading}/>
-                    <button class="btn" on:click="{signOut}" disabled="{loading}">Sign Out</button>
                 </div>
             </form>
         </div>
