@@ -3,9 +3,9 @@ export default function dbUtil(supabase) {
     return {
         pins: {
             async getAllCount() {
-                const { count, error } = await supabase
+                const {count, error} = await supabase
                     .from('pins')
-                    .select('*', { count: 'exact', head: true })
+                    .select('*', {count: 'exact', head: true})
                 if (error) {
                     console.error(error)
                 }
@@ -13,18 +13,50 @@ export default function dbUtil(supabase) {
             },
             async search(
                 attributes = '*',
+                searchParams = {},
                 order = {by: 'created_at', opts: {ascending: false}},
-                range = {start: 0, end: 9}
+                range = {start: 0, end: 9},
+                countOnly = false
             ) {
-                const {data, error} = await supabase
-                    .from('pins')
-                    .select(attributes)
-                    .order(order.by, order.opts)
-                    .range(range.start, range.end);
-                if (error) {
-                    console.error(error)
+                let dataset = supabase
+                    .from('pins');
+
+                if (countOnly) {
+                    dataset = dataset.select(attributes, {count: 'exact', head: true});
+                } else {
+                    dataset = dataset.select(attributes);
                 }
-                return {data, error}
+
+                if (searchParams) {
+                    if (searchParams.title) {
+                        dataset = dataset.ilike('title', `%${searchParams.title}%`);
+                    }
+                    if (searchParams.url) {
+                        dataset = dataset.ilike('url', `%${searchParams.url}%`);
+                    }
+                    if (searchParams.description) {
+                        dataset = dataset.ilike('description', `%${searchParams.description}%`);
+                    }
+                    if (searchParams.board_id) {
+                        dataset = dataset.eq('board_id', searchParams.board_id);
+                    }
+                    if (searchParams.owner_id) {
+                        dataset = dataset.eq('owner_id', searchParams.owner_id);
+                    }
+                    if (searchParams.fromDate) {
+                        dataset = dataset.gte('created_at', searchParams.fromDate);
+                    }
+                    if (searchParams.toDate) {
+                        dataset = dataset.lte('created_at', searchParams.toDate);
+                    }
+                }
+                if (!countOnly) {
+                    dataset = await dataset.order(order.by, order.opts).range(range.start, range.end);
+                }
+                if (dataset.error) {
+                    console.error(dataset.error)
+                }
+                return dataset
             },
             async getOne(id, attributes = '*') {
                 const {data, error} = await supabase
@@ -81,6 +113,15 @@ export default function dbUtil(supabase) {
             }
         },
         profiles: {
+            async getAll(attributes = '*') {
+                const {data, error} = await supabase
+                    .from('profiles')
+                    .select(attributes);
+                if (error) {
+                    console.error(error)
+                }
+                return {data, error}
+            },
             async getOne(id, attributes = '*') {
                 const {data, error} = await supabase
                     .from('profiles')
