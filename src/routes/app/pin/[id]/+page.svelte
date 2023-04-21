@@ -1,5 +1,5 @@
 <script>
-    import EditPinFormComponent from "$lib/components/feed/EditPinFormComponent.svelte";
+    import EditPinFormComponent from "$lib/components/pin/EditPinFormComponent.svelte";
     import {page} from '$app/stores'
 
     const mode = $page.url.searchParams.get('newPin') === 'true' ? 'NEW' : 'EXISTING'
