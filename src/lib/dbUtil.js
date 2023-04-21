@@ -1,6 +1,49 @@
 export default function dbUtil(supabase) {
 
     return {
+        profiles: {
+            async getAll(attributes = '*') {
+                const {data, error} = await supabase
+                    .from('profiles')
+                    .select(attributes);
+                if (error) {
+                    console.error(error)
+                }
+                return {data, error}
+            },
+            async getOne(id, attributes = '*') {
+                const {data, error} = await supabase
+                    .from('profiles')
+                    .select(attributes)
+                    .eq('id', id)
+                    .single();
+                if (error) {
+                    console.error(error)
+                }
+                return {data, error}
+            },
+            async update(id, profileData) {
+                const {data, error} = await supabase
+                    .from('profiles')
+                    .update(profileData)
+                    .eq('id', id);
+                if (error) {
+                    console.error(error)
+                }
+                return {data, error}
+            },
+        },
+        boards: {
+            async getAll(attributes = '*') {
+                const {data, error} = await supabase
+                    .from('boards')
+                    .select(attributes);
+                if (error) {
+                    console.error(error)
+                }
+                return {data, error}
+            }
+        },
         pins: {
             async getAllCount() {
                 const {count, error} = await supabase
@@ -101,43 +144,38 @@ export default function dbUtil(supabase) {
                 return {data, error}
             }
         },
-        boards: {
-            async getAll(attributes = '*') {
+        pinStars: {
+            async getStarByCurrentUserForPin(pinId) {
+                const userId = (await supabase.auth.getUser()).data.user.id
                 const {data, error} = await supabase
-                    .from('boards')
-                    .select(attributes);
-                if (error) {
-                    console.error(error)
-                }
-                return {data, error}
-            }
-        },
-        profiles: {
-            async getAll(attributes = '*') {
-                const {data, error} = await supabase
-                    .from('profiles')
-                    .select(attributes);
+                    .from('pin_stars')
+                    .select('*')
+                    .eq('pin_id', pinId)
+                    .eq('profile_id', userId);
                 if (error) {
                     console.error(error)
                 }
                 return {data, error}
             },
-            async getOne(id, attributes = '*') {
+            async removeStarByCurrentUserForPin(pinId) {
+                const userId = (await supabase.auth.getUser()).data.user.id
                 const {data, error} = await supabase
-                    .from('profiles')
-                    .select(attributes)
-                    .eq('id', id)
-                    .single();
+                    .from('pin_stars')
+                    .delete()
+                    .eq('pin_id', pinId)
+                    .eq('profile_id', userId);
                 if (error) {
                     console.error(error)
                 }
                 return {data, error}
             },
-            async update(id, profileData) {
+            async addStarByCurrentUserForPin(pinId) {
+                const userId = (await supabase.auth.getUser()).data.user.id
                 const {data, error} = await supabase
-                    .from('profiles')
-                    .update(profileData)
-                    .eq('id', id);
+                    .from('pin_stars')
+                    .insert([
+                        {profile_id: userId, pin_id: pinId},
+                    ]).select();
                 if (error) {
                     console.error(error)
                 }

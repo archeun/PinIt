@@ -16,8 +16,14 @@ export const actions = {
         const {supabaseClient} = await getSupabase(event);
         await dbUtil(supabaseClient).pins.delete(pinId)
     },
-    searchPins: async (event) => {
+    toggleStar: async (event) => {
         const pinId = (await event.request.formData()).get('pin-id');
         const {supabaseClient} = await getSupabase(event);
+        const existingStar = await dbUtil(supabaseClient).pinStars.getStarByCurrentUserForPin(pinId)
+        if(existingStar && existingStar.data && existingStar.data.length > 0) {
+            await dbUtil(supabaseClient).pinStars.removeStarByCurrentUserForPin(pinId)
+        } else {
+            await dbUtil(supabaseClient).pinStars.addStarByCurrentUserForPin(pinId)
+        }
     }
 };
