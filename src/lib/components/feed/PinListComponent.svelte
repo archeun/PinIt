@@ -3,6 +3,7 @@
     import {supabaseClient} from "$lib/supabaseClient";
     import {enhance} from '$app/forms';
     import dbUtil from "$lib/dbUtil";
+    import {page} from "$app/stores";
 
     let showPinCount = 10
     let pins = [];
@@ -14,13 +15,13 @@
 
     const searchPins = async () => {
         const {data} = await dbUtil(supabaseClient).pins.search(
-            `id,title,url,description,boards (name),profiles (username),created_at`,
+            `id,title,url,description,owner_id,boards (name),profiles (username),created_at`,
             searchParams,
             {by: 'created_at', opts: {ascending: false}},
             {start: pins.length, end: pins.length + showPinCount - 1}
         );
         allPinsCount = (await dbUtil(supabaseClient).pins.search(`*`, searchParams, {}, {}, true)).count
-        pins = [...pins, ...data]
+        pins = [...pins, ...populateExtraData(data)]
     }
 
     function handleSearch(event) {
@@ -38,6 +39,15 @@
             const deletedPinId = Object.fromEntries(formData)['pin-id'];
             pins = pins.filter(pin => pin.id !== deletedPinId)
         };
+    }
+
+    const populateExtraData = (pins) => {
+        const loggedInUserId = $page.data.session.user.id;
+        pins = pins.map(pin => {
+            pin.isOwnPin = pin.owner_id === loggedInUserId
+            return pin
+        })
+        return pins;
     }
 
     onMount(async () => {
@@ -103,25 +113,27 @@
                                 <div class="card-title text-info col-span-11 break-words break-all">
                                     <a target="_blank" href="{pin.url}">{pin.title}</a>
                                 </div>
-                                <div class="justify-self-end">
-                                    <a href={`/app/pin/${pin.id}`}>Edit</a>
-                                    <div class="dropdown dropdown-bottom dropdown-end">
-                                        <div tabindex="0" class="m-1 cursor-pointer">Delete</div>
-                                        <div tabindex="0"
-                                             class="dropdown-content card card-compact w-64 p-2 shadow bg-warning">
-                                            <div class="card-body">
-                                                <p>Do you really want to delete this pin?</p>
-                                                <div class="card-actions justify-end">
-                                                    <form name="delete-pin-form" method="POST" action="?/deletePin"
-                                                          use:enhance={handleDeletePin}>
-                                                        <input name="pin-id" type="hidden" value={pin.id}/>
-                                                        <button class="btn btn-error btn-xs">Yes, delete</button>
-                                                    </form>
+                                {#if pin.isOwnPin}
+                                    <div class="justify-self-end">
+                                        <a href={`/app/pin/${pin.id}`}>Edit</a>
+                                        <div class="dropdown dropdown-bottom dropdown-end">
+                                            <div tabindex="0" class="m-1 cursor-pointer">Delete</div>
+                                            <div tabindex="0"
+                                                 class="dropdown-content card card-compact w-64 p-2 shadow bg-warning">
+                                                <div class="card-body">
+                                                    <p>Do you really want to delete this pin?</p>
+                                                    <div class="card-actions justify-end">
+                                                        <form name="delete-pin-form" method="POST" action="?/deletePin"
+                                                              use:enhance={handleDeletePin}>
+                                                            <input name="pin-id" type="hidden" value={pin.id}/>
+                                                            <button class="btn btn-error btn-xs">Yes, delete</button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                {/if}
                             </div>
                             <p class="whitespace-pre-wrap break-words">{pin.description}</p>
                             <div class="card-actions justify-end text-xs">
