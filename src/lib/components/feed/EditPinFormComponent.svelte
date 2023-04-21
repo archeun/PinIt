@@ -5,11 +5,19 @@
     import dbUtil from "$lib/dbUtil";
 
     export let pin = {};
+    export let mode = 'EXISTING';
     let boards = [];
     onMount(async () => {
+        if (mode === 'NEW') {
+            const response = await fetch(`/api/url-metadata?url=${pin.url}`);
+            const urlMetadata = await response.json();
+            pin.title = urlMetadata.title
+            pin.description = urlMetadata.description
+        }
         const {data} = await dbUtil(supabaseClient).boards.getAll()
         boards = data
     })
+
 </script>
 
 <div class="p-4 mb-4 flex">

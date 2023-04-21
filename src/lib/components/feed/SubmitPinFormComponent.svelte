@@ -5,7 +5,7 @@
     const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
         return async ({result, update}) => {
             if (result.status === 200 && result.type === 'success' && result.data && result.data.id) {
-                await goto(`/app/pin/${result.data.id}`)
+                await goto(`/app/pin/${result.data.id}?newPin=true`)
             }
         };
     }
