@@ -23,6 +23,7 @@
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
 		"@supabase/supabase-js": "^2.0.5",
 		"daisyui": "^2.38.1",
-		"moment": "^2.29.4"
+		"moment": "^2.29.4",
+		"validate.js": "^0.13.1"
 	}
 }

@@ -116,7 +116,7 @@ export default function dbUtil(supabase) {
                 const {data, error} = await supabase
                     .from('pins')
                     .insert([
-                        {title: pinData.url, url: pinData.url},
+                        {title: pinData.title, url: pinData.url},
                     ]).select();
                 if (error) {
                     console.error(error)

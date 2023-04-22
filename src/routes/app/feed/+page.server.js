@@ -5,7 +5,12 @@ export const actions = {
     submitPin: async (event) => {
         const {supabaseClient} = await getSupabase(event);
         const formData = await event.request.formData();
-        const {data, error} = await dbUtil(supabaseClient).pins.insert({url: formData.get('pin-url')})
+        const {data, error} = await dbUtil(supabaseClient).pins.insert(
+            {
+                url: formData.get('pin-url'),
+                title: formData.get('pin-url').trim().substring(0, 200)
+            }
+        )
         if (data && data[0] && data[0].id) {
             return data[0]
         }
@@ -20,7 +25,7 @@ export const actions = {
         const pinId = (await event.request.formData()).get('pin-id');
         const {supabaseClient} = await getSupabase(event);
         const existingStar = await dbUtil(supabaseClient).pinStars.getStarByCurrentUserForPin(pinId)
-        if(existingStar && existingStar.data && existingStar.data.length > 0) {
+        if (existingStar && existingStar.data && existingStar.data.length > 0) {
             await dbUtil(supabaseClient).pinStars.removeStarByCurrentUserForPin(pinId)
         } else {
             await dbUtil(supabaseClient).pinStars.addStarByCurrentUserForPin(pinId)
