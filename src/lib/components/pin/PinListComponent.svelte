@@ -13,6 +13,7 @@
     let allPinsCount = 0;
     let searchParams = {}
     let showSearchModal = false
+    let isFiltered = false
 
     const searchPins = async () => {
         const {data} = await dbUtil(supabaseClient).pins.search(
@@ -23,6 +24,7 @@
         );
         allPinsCount = (await dbUtil(supabaseClient).pins.search(`*`, searchParams, {}, {}, true)).count
         pins = [...pins, ...populateExtraData(data)]
+        isFiltered = Object.values(searchParams).some(p => !!p);
     }
 
     function handleSearch(event) {
@@ -63,6 +65,10 @@
         return pins;
     }
 
+    const resetFilters = () => {
+        handleSearch({submitter: {id: 'reset-btn'}})
+    }
+
     onMount(async () => {
         await searchPins()
         const boardsData = await dbUtil(supabaseClient).boards.getAll()
@@ -76,20 +82,24 @@
     <div class="w-full">
         <div class="flex">
             <label for="search-pins-modal" class="btn">Search</label>
+            {#if isFiltered}
+                <a on:click={resetFilters}>Reset Filters</a>
+            {/if}
             <input type="checkbox" bind:checked={showSearchModal} id="search-pins-modal" class="modal-toggle"/>
             <div class="modal">
                 <div class="modal-box relative">
                     <label for="search-pins-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                     <form name="search-pin-form" method="POST" class="flex w-full flex-col"
                           on:submit|preventDefault={handleSearch}>
-                        <input name="pin-title" type="text" placeholder="Search by title..."
+                        <input maxlength="250" name="pin-title" type="text" placeholder="Search by title..."
                                bind:value={searchParams.title}
                                class="input-info input rounded-none"/>
-                        <input name="pin-url" type="text" placeholder="Search by URL..."
+                        <input maxlength="2048" name="pin-url" type="text" placeholder="Search by URL..."
                                bind:value={searchParams.url}
                                class="input-info input rounded-none"/>
-                        <textarea name="pin-description" placeholder="Search by description..."
-                                  bind:value={searchParams.description}></textarea>
+                        <input maxlength="400" name="pin-description" placeholder="Search by description..."
+                               class="input-info input rounded-none"
+                               bind:value={searchParams.description}/>
                         <select name="pin-board-id" class="select select-bordered"
                                 bind:value={searchParams.board_id}>
                             {#each boards as board}
