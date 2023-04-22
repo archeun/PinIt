@@ -42,7 +42,7 @@
                         </div>
                     {/if}
                 </div>
-                <p class="whitespace-pre-wrap break-words">{pin.description}</p>
+                <p class="whitespace-pre-wrap break-words">{pin.description ?? ''}</p>
                 <div class="card-actions justify-end text-xs">
                     {#if mode !== 'preview'}
                         {pin.boards?.name}

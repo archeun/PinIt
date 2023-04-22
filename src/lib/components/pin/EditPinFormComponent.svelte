@@ -25,14 +25,15 @@
         const urlMetadata = await response.json();
         pin.title = urlMetadata.title
         pin.description = urlMetadata.description
-        pin.image = urlMetadata.images[0]
+        pin.image = urlMetadata.images ? urlMetadata.images[0] : ''
     }
 
-    const validateSubmitPinForm = () => {
+    const validateEditPinForm = () => {
         validationErrors = validateForm(Object.fromEntries(new FormData(document.querySelector('form'))));
     }
 
     const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
+        validateEditPinForm()
         if (Object.keys(validationErrors).length) {
             cancel();
         }
@@ -44,15 +45,17 @@
 
 <div class="p-4 mb-4 flex flex-col">
     <form name="edit-pin-form" method="POST" class="flex w-full flex-col" use:enhance={formEnhanceCallback}>
-        <input on:change={validateSubmitPinForm} name="pin-url" type="text" placeholder="Paste the URL here..." bind:value={pin.url}
+        <input on:change={validateEditPinForm} name="pin-url" type="text" placeholder="Paste the URL here..."
+               bind:value={pin.url}
                class="input-info input rounded-none w-full"/>
         <FormFieldErrorsComponent errors={validationErrors['pin-url']}/>
         <a class="btn btn-xs mt-2 mb-2" on:click={autoGenerateMetadata}>Auto Generate Metadata</a>
-        <input on:change={validateSubmitPinForm} name="pin-title" type="text" placeholder="Title of the pin..." bind:value={pin.title}
+        <input on:change={validateEditPinForm} name="pin-title" type="text" placeholder="Title of the pin..."
+               bind:value={pin.title}
                class="input-info input rounded-none w-full"/>
         <FormFieldErrorsComponent errors={validationErrors['pin-title']}/>
         <input name="pin-image" type="hidden" bind:value={pin.image}/>
-        <textarea on:change={validateSubmitPinForm} name="pin-description" placeholder="Description of the pin..."
+        <textarea on:change={validateEditPinForm} name="pin-description" placeholder="Description of the pin..."
                   bind:value={pin.description}></textarea>
         <FormFieldErrorsComponent errors={validationErrors['pin-description']}/>
         <select name="pin-board-id" class="select select-bordered w-full max-w-xs" bind:value={pin.board_id}>

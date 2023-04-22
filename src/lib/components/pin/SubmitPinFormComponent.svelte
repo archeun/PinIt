@@ -11,6 +11,7 @@
     }
 
     const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
+        validateSubmitPinForm()
         if (Object.keys(validationErrors).length) {
             cancel();
         }

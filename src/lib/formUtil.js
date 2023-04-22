@@ -21,7 +21,6 @@ const validationRules = {
         }
     },
     'pin-description': {
-        presence: {allowEmpty: false},
         length: {
             maximum: 400,
             message: 'should be less than 400 characters'
