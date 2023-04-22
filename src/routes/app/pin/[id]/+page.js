@@ -13,7 +13,7 @@ export async function load(event) {
     }
     const {data} = await dbUtil(sbClient).pins.getOne(
         params.id,
-        `id,title,url,description,board_id,created_at,boards (name),profiles (username)`
+        `id,title,url,description,board_id,created_at,image,boards (name),profiles (username)`
     )
     const pin = data
     if (!pin) {

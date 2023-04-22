@@ -3,7 +3,7 @@
     import {supabaseClient} from "$lib/supabaseClient";
     import dbUtil from "$lib/dbUtil";
     import {page} from "$app/stores";
-    import PinComponent from "./PinComponent.svelte";
+    import PinComponent from "$lib/components/pin/PinComponent.svelte";
 
     const pinAttributes = `id,title,url,description,owner_id,image,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
     let showPinCount = 10

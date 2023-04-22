@@ -9,6 +9,7 @@ export const actions = {
             title: formData.get('pin-title'),
             url: formData.get('pin-url'),
             description: formData.get('pin-description'),
+            image: formData.get('pin-image'),
             board_id: formData.get('pin-board-id')
         });
     }
