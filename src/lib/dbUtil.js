@@ -127,7 +127,8 @@ export default function dbUtil(supabase) {
                 const {data, error} = await supabase
                     .from('pins')
                     .update(pinData)
-                    .eq('id', id);
+                    .eq('id', id)
+                    .select();
                 if (error) {
                     console.error(error)
                 }

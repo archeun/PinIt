@@ -6,6 +6,7 @@
     import PinComponent from "$lib/components/pin/PinComponent.svelte";
     import {validateForm} from "$lib/formUtil";
     import FormFieldErrorsComponent from "$lib/components/core/FormFieldErrorsComponent.svelte";
+    import toast, {Toaster} from 'svelte-french-toast';
 
     export let pin = {};
     export let mode = 'EXISTING';
@@ -37,7 +38,12 @@
         if (Object.keys(validationErrors).length) {
             cancel();
         }
-        return async (res) => {
+        return async ({result}) => {
+            if (result.type === 'success') {
+                toast.success('Successfully updated.')
+            } else {
+                toast.error('Something went wrong.')
+            }
         };
     }
 
@@ -66,4 +72,5 @@
         <PinComponent pin={pin} mode="preview"/>
         <button class="btn gap-2 rounded-none btn-info text-white font-bold">Save</button>
     </form>
+    <Toaster/>
 </div>
