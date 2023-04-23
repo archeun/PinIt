@@ -5,6 +5,7 @@
     import {page} from "$app/stores";
     import PinComponent from "$lib/components/pin/PinComponent.svelte";
     import PinLoadingSkeletonComponent from "$lib/components/pin/PinLoadingSkeletonComponent.svelte";
+    import toast from 'svelte-french-toast';
 
     const pinAttributes = `id,title,url,description,owner_id,image,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
     let showPinCount = 10
@@ -28,20 +29,23 @@
         isFiltered = Object.values(searchParams).some(p => !!p);
     }
 
+    async function resetAndSearchPins() {
+        pins = []
+        await searchPins()
+    }
+
     function handleSearch(event) {
         if (event.submitter.id === 'reset-btn') {
             searchParams = {}
         }
-        pins = []
-        searchPins()
+        resetAndSearchPins()
         showSearchModal = false
     }
 
     const handleDeletePin = (params) => {
         return async (opts) => {
-            const formData = new FormData(params.form);
-            const pinId = Object.fromEntries(formData)['pin-id'];
-            pins = pins.filter(pin => pin.id !== pinId)
+            await resetAndSearchPins()
+            toast.success('Successfully deleted the Pin')
         };
     }
 
