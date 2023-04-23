@@ -80,54 +80,95 @@
 
 <div class="flex pl-4 pr-4" id="pin-list-container">
     <div class="w-full">
-        <div class="flex">
-            <label for="search-pins-modal" class="btn">Search</label>
-            {#if isFiltered}
-                <a on:click={resetFilters}>Reset Filters</a>
-            {/if}
-            <input type="checkbox" bind:checked={showSearchModal} id="search-pins-modal" class="modal-toggle"/>
-            <div class="modal">
-                <div class="modal-box relative">
-                    <label for="search-pins-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                    <form name="search-pin-form" method="POST" class="flex w-full flex-col"
-                          on:submit|preventDefault={handleSearch}>
-                        <input maxlength="250" name="pin-title" type="text" placeholder="Search by title..."
-                               bind:value={searchParams.title}
-                               class="input-info input rounded-none"/>
-                        <input maxlength="2048" name="pin-url" type="text" placeholder="Search by URL..."
-                               bind:value={searchParams.url}
-                               class="input-info input rounded-none"/>
-                        <input maxlength="400" name="pin-description" placeholder="Search by description..."
-                               class="input-info input rounded-none"
-                               bind:value={searchParams.description}/>
-                        <select name="pin-board-id" class="select select-bordered"
-                                bind:value={searchParams.board_id}>
-                            {#each boards as board}
-                                <option value={board.id}>{board.name}</option>
-                            {/each}
-                        </select>
-                        <select name="pin-owner-id" class="select select-bordered"
-                                bind:value={searchParams.owner_id}>
-                            {#each profiles as profile}
-                                <option value={profile.id}>{profile.username}</option>
-                            {/each}
-                        </select>
-                        <label for="pin-created-at-from">From</label>
-                        <input id="pin-created-at-from" type="date" name="pin-created-at-from" class="input"
-                               bind:value={searchParams.fromDate}/>
-                        <label for="pin-created-at-to">To</label>
-                        <input id="pin-created-at-to" type="date" name="pin-created-at-to" class="input"
-                               bind:value={searchParams.toDate}/>
-                        <button id="search-btn" class="btn gap-2 rounded-none btn-info text-white font-bold">Search
-                        </button>
-                        <button id="reset-btn" class="btn gap-2 rounded-none btn-info text-white font-bold">Reset
-                        </button>
-                    </form>
+        <div class="grid grid-cols-12">
+            <div class="col-span-10">
+                <label for="search-pins-modal" class="btn btn-xs btn-outline btn-success mt-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                         stroke="currentColor" class="w-3.5 h-3.5 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"/>
+                    </svg>
+                    Filter Pins
+                </label>
+                {#if isFiltered}
+                    <a class="text-warning text-sm font-bold underline cursor-pointer" on:click={resetFilters}>
+                        Reset Filters
+                    </a>
+                {/if}
+                <input type="checkbox" bind:checked={showSearchModal} id="search-pins-modal" class="modal-toggle"/>
+                <div class="modal">
+                    <div class="modal-box relative">
+                        <h3 class="font-bold text-lg">Filter Pins</h3>
+                        <label for="search-pins-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                        <form name="search-pin-form" method="POST" class="flex w-full flex-col mt-5"
+                              on:submit|preventDefault={handleSearch}>
+                            <label class="text-sm font-bold mb-1" for="pin-board-id">Title</label>
+                            <input maxlength="250" name="pin-title" type="text" placeholder="Search by title..."
+                                   bind:value={searchParams.title}
+                                   class="input-bordered input rounded-none mb-2 input-sm"/>
+                            <label class="text-sm font-bold mb-1" for="pin-board-id">URL</label>
+                            <input maxlength="2048" name="pin-url" type="text" placeholder="Search by URL..."
+                                   bind:value={searchParams.url}
+                                   class="input-bordered input rounded-none mb-2 input-sm"/>
+                            <label class="text-sm font-bold mb-1" for="pin-board-id">Description</label>
+                            <input maxlength="400" name="pin-description" placeholder="Search by description..."
+                                   class="input-bordered input rounded-none mb-2 input-sm"
+                                   bind:value={searchParams.description}/>
+                            <div class="grid grid-cols-12">
+                                <div class="grid col-span-6">
+                                    <label class="text-sm font-bold mb-1" for="pin-board-id">Board</label>
+                                    <select name="pin-board-id" id="pin-board-id"
+                                            class="select select-bordered rounded-none mb-2 select-sm"
+                                            bind:value={searchParams.board_id}>
+                                        {#each boards as board}
+                                            <option value={board.id}>{board.name}</option>
+                                        {/each}
+                                    </select>
+                                </div>
+                                <div class="grid col-span-6">
+                                    <label class="text-sm font-bold mb-1" for="pin-owner-id">Owner</label>
+                                    <select name="pin-owner-id" id="pin-owner-id"
+                                            class="select select-bordered rounded-none mb-2 select-sm"
+                                            bind:value={searchParams.owner_id}>
+                                        {#each profiles as profile}
+                                            <option value={profile.id}>{profile.username}</option>
+                                        {/each}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-12">
+                                <div class="grid col-span-6">
+                                    <label class="text-sm font-bold mb-1" for="pin-created-at-from">From</label>
+                                    <input id="pin-created-at-from" type="date" name="pin-created-at-from"
+                                           class="input input-bordered rounded-none mb-2 input-sm"
+                                           bind:value={searchParams.fromDate}/>
+                                </div>
+                                <div class="grid col-span-6">
+                                    <label class="text-sm font-bold mb-1" for="pin-created-at-to">To</label>
+                                    <input id="pin-created-at-to" type="date" name="pin-created-at-to"
+                                           class="input input-bordered rounded-none mb-2 input-sm"
+                                           bind:value={searchParams.toDate}/>
+                                </div>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="grid grid-cols-12 gap-2">
+                                <button id="search-btn"
+                                        class="btn rounded-none btn-sm col-span-10 btn-primary text-white font-bold">
+                                    Search
+                                </button>
+                                <button id="reset-btn"
+                                        class="btn rounded-none btn-sm col-span-2 btn-secondary text-white font-bold">
+                                    Reset
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+            <div class="text-xs col-span-2 mt-1 self-center place-self-end">Showing {pins.length} pins out
+                of {allPinsCount}</div>
         </div>
-        <ul>
-            <li><span class="float-right">Showing {pins.length} pins out of {allPinsCount}</span></li>
+        <ul class="mt-2">
             {#each pins as pin}
                 <li>
                     <PinComponent pin={pin} onDeletePin={handleDeletePin} onToggleStar={handleStarToggle}/>

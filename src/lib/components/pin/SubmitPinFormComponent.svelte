@@ -23,7 +23,7 @@
     }
 </script>
 
-<div class="p-4 mb-4">
+<div class="pl-4 pr-4 pt-4">
     <div class="flex mb-2">
         <span class="bg-info pt-3 pl-3.5 pr-3.5 ">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
