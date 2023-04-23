@@ -3,6 +3,7 @@
     import {onMount} from 'svelte'
     import {supabaseClient} from '$lib/supabaseClient'
     import dbUtil from "$lib/dbUtil";
+    import toast from "svelte-french-toast";
 
     const session = $page.data.session;
     let loading = false
@@ -47,6 +48,7 @@
             })
 
             if (error) throw error
+            toast.success('Successfully updated')
         } catch (error) {
             if (error instanceof Error) {
                 alert(error.message)
@@ -63,25 +65,26 @@
 </svelte:head>
 
 <div class="flex justify-center">
-    <div class="card w-full bg-base-100 shadow-lg bg-info">
-        <figure class="pt-5"><img alt="{username}" src="{avatarUrl}"></figure>
+    <div class="card w-96 bg-primary mt-[5%] shadow-lg">
+        <figure class="pt-16"><img alt="{username}" src="{avatarUrl}"></figure>
         <div class="card-body">
             <form class="form-widget" on:submit|preventDefault="{updateProfile}">
-                <p class="mb-3">
-                    <label class="input-group">
+                <div class="form-control">
+                    <label class="input-group input-group-vertical">
                         <span>Email</span>
                         <input id="email" type="text" class="input w-full max-w-xs" value="{session.user.email}"
                                disabled/>
                     </label>
-                </p>
-                <p class="mb-3">
-                    <label class="input-group">
+                </div>
+                <div class="form-control mt-2">
+                    <label class="input-group input-group-vertical">
                         <span>Name</span>
-                        <input id="username" type="text" class="input w-full max-w-xs" bind:value="{username}"/>
+                        <input required id="username" type="text" class="input w-full max-w-xs"
+                               bind:value="{username}"/>
                     </label>
-                </p>
-                <div class="card-actions justify-end">
-                    <input type="submit" class="btn btn-primary" value={loading ? 'Loading...' : 'Update'}
+                </div>
+                <div class="card-actions justify-end mt-5">
+                    <input type="submit" class="btn btn-success" value={loading ? 'Loading...' : 'Update'}
                            disabled={loading}/>
                 </div>
             </form>
