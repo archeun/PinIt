@@ -7,9 +7,12 @@
     import {validateForm} from "$lib/formUtil";
     import FormFieldErrorsComponent from "$lib/components/core/FormFieldErrorsComponent.svelte";
     import toast, {Toaster} from 'svelte-french-toast';
+    import PinLoadingSkeletonComponent from "$lib/components/pin/PinLoadingSkeletonComponent.svelte";
 
     export let pin = {};
     export let mode = 'EXISTING';
+    let fetchingMetadata = true;
+    let disableSaveBtn = true;
     let boards = [];
     let validationErrors = []
 
@@ -19,15 +22,29 @@
         }
         const {data} = await dbUtil(supabaseClient).boards.getAll()
         boards = data
+        fetchingMetadata = false;
+        disableSaveBtn = false;
     })
 
     const autoGenerateMetadata = async () => {
-        const response = await fetch(`/api/url-metadata?url=${pin.url}`);
-        const urlMetadata = await response.json();
-        pin.title = urlMetadata.title
-        pin.description = urlMetadata.description
-        pin.image = urlMetadata.images ? urlMetadata.images[0] : ''
+        fetchingMetadata = true
+        disableSaveBtn = true;
+        let response = {};
+        try {
+            response = await fetch(`/api/url-metadata?url=${pin.url}`);
+            const urlMetadata = await response.json();
+            if (!urlMetadata.title) {
+                toast.error('Could not automatically fetch information from the given URL. Please check whether it is a valid URL.')
+            }
+            pin.title = urlMetadata.title ?? pin.title
+            pin.description = urlMetadata.description ?? pin.description
+            pin.image = urlMetadata.images ? urlMetadata.images[0] : '' ?? pin.image
+        } catch (e) {
+            toast.error('Could not fetch metadata from the given URL')
+        }
         setTimeout(validateEditPinForm, 0)
+        fetchingMetadata = false
+        disableSaveBtn = false;
     }
 
     const validateEditPinForm = () => {
@@ -35,6 +52,7 @@
     }
 
     const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
+        disableSaveBtn = true
         validateEditPinForm()
         if (Object.keys(validationErrors).length) {
             cancel();
@@ -45,6 +63,7 @@
             } else {
                 toast.error('Something went wrong.')
             }
+            disableSaveBtn = false;
         };
     }
 
@@ -96,8 +115,12 @@
                     </div>
                 </div>
                 <div class="divider">Preview</div>
-                <PinComponent pin={pin} mode="preview"/>
-                <button class="btn gap-2 rounded-none btn-info text-white font-bold w-full">Save</button>
+                {#if fetchingMetadata}
+                    <PinLoadingSkeletonComponent/>
+                {:else }
+                    <PinComponent pin={pin} mode="preview"/>
+                {/if}
+                <button class:btn-disabled={disableSaveBtn} class:loading={disableSaveBtn} class="btn gap-2 rounded-none btn-info text-white font-bold w-full">Save</button>
             </form>
         </div>
     </div>
