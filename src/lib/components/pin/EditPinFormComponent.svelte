@@ -6,7 +6,7 @@
     import PinComponent from "$lib/components/pin/PinComponent.svelte";
     import {validateForm} from "$lib/formUtil";
     import FormFieldErrorsComponent from "$lib/components/core/FormFieldErrorsComponent.svelte";
-    import toast, {Toaster} from 'svelte-french-toast';
+    import toast from 'svelte-french-toast';
     import PinLoadingSkeletonComponent from "$lib/components/pin/PinLoadingSkeletonComponent.svelte";
 
     export let pin = {};
@@ -124,6 +124,4 @@
             </form>
         </div>
     </div>
-
-    <Toaster/>
 </div>

@@ -3,6 +3,7 @@
     import {invalidate} from '$app/navigation'
     import {onMount} from 'svelte'
     import '$lib/css/main.css'
+    import {Toaster} from 'svelte-french-toast';
 
     onMount(() => {
         const {
@@ -64,4 +65,5 @@
             </li>
         </ul>
     </div>
+    <Toaster/>
 </div>
