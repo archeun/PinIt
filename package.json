@@ -22,6 +22,7 @@
 	"dependencies": {
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
 		"@supabase/supabase-js": "^2.0.5",
+		"@tailwindcss/line-clamp": "^0.4.4",
 		"daisyui": "^2.38.1",
 		"moment": "^2.29.4",
 		"svelte-french-toast": "^1.0.4-beta.0",

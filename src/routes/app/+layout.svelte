@@ -25,7 +25,7 @@
     <label for="menu-drawer" class="btn rounded-none btn-xs lg:hidden fixed mt-0 ml-0">::</label>
     <div class="drawer-side">
         <label for="menu-drawer" class="drawer-overlay"></label>
-        <ul class="menu ml-0 pl-1 p-2 w-16 bg-gray-300 text-base-content">
+        <ul class="menu ml-0 pl-1 p-2 w-16 bg-primary">
             <li>
                 <a href="/app">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
