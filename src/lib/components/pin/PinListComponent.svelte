@@ -4,6 +4,7 @@
     import dbUtil from "$lib/dbUtil";
     import {page} from "$app/stores";
     import PinComponent from "$lib/components/pin/PinComponent.svelte";
+    import PinLoadingSkeletonComponent from "$lib/components/pin/PinLoadingSkeletonComponent.svelte";
 
     const pinAttributes = `id,title,url,description,owner_id,image,boards (name),profiles (username),pin_stars (profiles (id,username)),created_at`;
     let showPinCount = 10
@@ -169,11 +170,17 @@
                 of {allPinsCount}</div>
         </div>
         <ul class="mt-2">
-            {#each pins as pin}
-                <li>
-                    <PinComponent pin={pin} onDeletePin={handleDeletePin} onToggleStar={handleStarToggle}/>
-                </li>
-            {/each}
+            {#if pins.length === 0}
+                {#each [1, 2] as i}
+                    <PinLoadingSkeletonComponent/>
+                {/each}
+            {:else }
+                {#each pins as pin}
+                    <li>
+                        <PinComponent pin={pin} onDeletePin={handleDeletePin} onToggleStar={handleStarToggle}/>
+                    </li>
+                {/each}
+            {/if}
         </ul>
         <button class:hidden={pins.length >= allPinsCount} class="btn btn-link" on:click={searchPins}>
             Load more
