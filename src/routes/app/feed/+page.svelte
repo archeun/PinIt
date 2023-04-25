@@ -1,6 +1,6 @@
 <script>
-    import SubmitPinFormComponent from "$lib/components/feed/SubmitPinFormComponent.svelte";
-    import PinListComponent from "$lib/components/feed/PinListComponent.svelte";
+    import SubmitPinFormComponent from "$lib/components/pin/SubmitPinFormComponent.svelte";
+    import PinListComponent from "$lib/components/pin/PinListComponent.svelte";
 </script>
 
 <div class="container mx-auto">
