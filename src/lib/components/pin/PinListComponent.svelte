@@ -20,8 +20,8 @@
     let isSorted = false
     let sortedByAndOrder = 'Newest first'
 
-    const searchPins = async () => {
-        isListLoading = true
+    const searchPins = async (fullListLoad = true) => {
+        isListLoading = fullListLoad
         const {data} = await dbUtil(supabaseClient).pins.search(
             pinAttributes,
             searchParams,
@@ -283,7 +283,7 @@
                 {/each}
             {/if}
         </ul>
-        <button class:hidden={pins.length >= allPinsCount} class="btn btn-link" on:click={searchPins}>
+        <button class:hidden={pins.length >= allPinsCount} class="btn btn-link" on:click={() => searchPins(false)}>
             Load more
         </button>
     </div>
