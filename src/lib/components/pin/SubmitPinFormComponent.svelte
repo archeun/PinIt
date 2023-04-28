@@ -5,20 +5,24 @@
     import FormFieldErrorsComponent from "$lib/components/core/FormFieldErrorsComponent.svelte";
 
     let validationErrors = []
+    let isFormSaving = false
 
     const validateSubmitPinForm = () => {
         validationErrors = validateForm(Object.fromEntries(new FormData(document.querySelector('form'))));
     }
 
     const formEnhanceCallback = ({form, data, action, cancel, submitter}) => {
+        isFormSaving = true
         validateSubmitPinForm()
         if (Object.keys(validationErrors).length) {
             cancel();
+            isFormSaving = false
         }
         return async ({result, update}) => {
             if (result.status === 200 && result.type === 'success' && result.data && result.data.id) {
                 await goto(`/app/pin/${result.data.id}?newPin=true`)
             }
+            isFormSaving = false
         };
     }
 </script>
@@ -36,12 +40,12 @@
               use:enhance={formEnhanceCallback}>
             <input on:change={validateSubmitPinForm} name="pin-url" type="text" placeholder="Paste the URL here..."
                    class="input-info input rounded-none w-full"/>
-            <button class="btn gap-2 rounded-none btn-info text-white font-bold">
+            <button class:loading={isFormSaving} class:btn-disabled={isFormSaving} class="btn gap-2 rounded-none btn-info text-white font-bold">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                      stroke="currentColor" class="w-6 h-6">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/>
-                </svg>
+                </svg>  
                 Pin-It
             </button>
         </form>
