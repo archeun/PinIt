@@ -21,7 +21,7 @@
     <div class="hero-content text-center">
         <div class="max-w-lg">
             <h1 class="text-8xl font-bold text-accent">ARCHEUN</h1>
-            <p class="py-6">Hello, what are you planning to get done today? Please login to access your apps ...</p>
+            <p class="py-6">Hello, what are you planning to accomplish today? Please login to access your apps ...</p>
             <button class="btn btn-primary" on:click={signInWithGoogle}>Sign in with Google</button>
         </div>
     </div>
