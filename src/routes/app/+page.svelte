@@ -2,7 +2,7 @@
     <div class="hero-content text-center">
         <div class="max-w-lg">
             <h1 class="text-8xl font-bold text-accent">ARCHEUN</h1>
-            <p class="py-6">Hello, what are you planning to get done today? Please chose an app from the below to start
+            <p class="py-6">Hello, what are you planning accomplish today? Please chose an app from the below to start
                 working ...</p>
             <div class="grid grid-cols-1">
                 <div class="justify-self-center">
