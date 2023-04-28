@@ -83,6 +83,7 @@
     }
 
     const resetFilters = () => {
+        sortedByAndOrder = 'Newest first'
         handleSearch({submitter: {id: 'reset-btn'}})
     }
 
